@@ -1,0 +1,23 @@
+name: Deploy on merge to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Pull latest code
+        run: |
+          cd ~/cicd
+          git pull origin main
+
+      - name: Rebuild and restart containers
+        run: |
+          cd ~/cicd
+          docker compose down
+          docker compose build --no-cache
+          docker compose up -d
